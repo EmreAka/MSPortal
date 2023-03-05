@@ -18,11 +18,19 @@ else
     </div>
 }
 
-@if (todoTaskList is not null){
+@if (todoTaskList is not null)
+{
     <div class="flex flex-col justify-center mt-5">
         @foreach (var todo in todoTaskList)
         {
             <h2>@todo.DisplayName</h2>
+
+            if(todo.Tasks is not null){
+                foreach(var task in todo.Tasks){
+                    <h3>@task.Title</h3>
+                    <h3>@task.Status</h3>
+                }
+            }
         }
     </div>
 }
@@ -37,6 +45,17 @@ else
         {
             user = await GraphServiceClient.Me.Request().GetAsync();
             todoTaskList = await GraphServiceClient.Me.Todo.Lists.Request().GetAsync();
+            foreach (var item in todoTaskList)
+            {
+                var tasks = await GraphServiceClient.Me
+                .Todo
+                .Lists[item.Id]
+                .Tasks
+                .Request()
+                .GetAsync();
+                tasks.ToList();
+                item.Tasks = tasks;
+            }
         }
         catch (Exception ex)
         {
@@ -45,13 +64,13 @@ else
     }
 
     @* public IList<TodoTask>? FetchTasks(string todoId){
-        var tasks = GraphServiceClient.Me
-            .Todo
-            .Lists[todoId]
-            .Tasks
-            .Request()
-            .GetAsync();
-        
-        return tasks.GetAwaiter().GetResult().CurrentPage;
-    } *@
+var tasks = GraphServiceClient.Me
+.Todo
+.Lists[todoId]
+.Tasks
+.Request()
+.GetAsync();
+
+return tasks.GetAwaiter().GetResult().CurrentPage;
+} *@
 }
