@@ -18,6 +18,15 @@ else
     </div>
 }
 
+@if (todoTaskList is not null){
+    <div class="flex flex-col justify-center mt-5">
+        @foreach (var todo in todoTaskList)
+        {
+            <h2>@todo.DisplayName</h2>
+        }
+    </div>
+}
+
 @code {
     User? user;
     ITodoListsCollectionPage? todoTaskList;
@@ -28,38 +37,21 @@ else
         {
             user = await GraphServiceClient.Me.Request().GetAsync();
             todoTaskList = await GraphServiceClient.Me.Todo.Lists.Request().GetAsync();
-            foreach (var item in todoTaskList)
-            {
-                Console.WriteLine(item.DisplayName);
-                @* Console.WriteLine(item.Id); *@
-
-                if (item.Tasks is not null)
-                {
-                    foreach (var task in item.Tasks)
-                    {
-                        Console.WriteLine(task.Title);
-                        Console.WriteLine(task.Status);
-                    }
-                }
-            }
-            var tasks = await GraphServiceClient.Me
-            .Todo
-            .Lists["AQMkADAwATM3ZmYAZS1jZjQxLTI2MmEtMDACLTAwCgAuAAAD1wsGMPHgE0W6rO6pfj1j-gEAVBQGqwWVe0KBjbCxKKEtxwACgfyHlAAAAA=="]
-            .Tasks
-            .Request()
-            .GetAsync();
-
-            foreach (var taskx in tasks)
-            {
-                Console.WriteLine("HEHEHEHEHEHE");
-                Console.WriteLine(taskx.Title);
-                Console.WriteLine(taskx.Status);
-                Console.WriteLine(taskx.Body.Content);
-            }
         }
         catch (Exception ex)
         {
             ConsentHandler.HandleException(ex);
         }
     }
+
+    @* public IList<TodoTask>? FetchTasks(string todoId){
+        var tasks = GraphServiceClient.Me
+            .Todo
+            .Lists[todoId]
+            .Tasks
+            .Request()
+            .GetAsync();
+        
+        return tasks.GetAwaiter().GetResult().CurrentPage;
+    } *@
 }
