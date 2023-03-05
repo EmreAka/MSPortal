@@ -6,34 +6,56 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1 class="bg-red-500 text-white font-bold">HELLOO!</h1>
-
 @if (user == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table>
-        <tr>
-            <th>Property</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td>@user.DisplayName</td>
-        </tr>
-    </table>
+    <div class="flex flex-col items-center justify-center">
+        <h2>@user.DisplayName</h2>
+        <h2>@user.Mail</h2>
+    </div>
 }
 
 @code {
     User? user;
+    ITodoListsCollectionPage? todoTaskList;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             user = await GraphServiceClient.Me.Request().GetAsync();
+            todoTaskList = await GraphServiceClient.Me.Todo.Lists.Request().GetAsync();
+            foreach (var item in todoTaskList)
+            {
+                Console.WriteLine(item.DisplayName);
+                @* Console.WriteLine(item.Id); *@
+
+                if (item.Tasks is not null)
+                {
+                    foreach (var task in item.Tasks)
+                    {
+                        Console.WriteLine(task.Title);
+                        Console.WriteLine(task.Status);
+                    }
+                }
+            }
+            var tasks = await GraphServiceClient.Me
+            .Todo
+            .Lists["AQMkADAwATM3ZmYAZS1jZjQxLTI2MmEtMDACLTAwCgAuAAAD1wsGMPHgE0W6rO6pfj1j-gEAVBQGqwWVe0KBjbCxKKEtxwACgfyHlAAAAA=="]
+            .Tasks
+            .Request()
+            .GetAsync();
+
+            foreach (var taskx in tasks)
+            {
+                Console.WriteLine("HEHEHEHEHEHE");
+                Console.WriteLine(taskx.Title);
+                Console.WriteLine(taskx.Status);
+                Console.WriteLine(taskx.Body.Content);
+            }
         }
         catch (Exception ex)
         {
