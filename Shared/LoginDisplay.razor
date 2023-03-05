@@ -1,9 +1,13 @@
 ﻿<AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity?.Name!
-        <a href="MicrosoftIdentity/Account/SignOut">Log out</a>
+        Hello, @context.User.Identity?.Name
+        <button class="bg-gray-700 px-2 py-1 rounded-md">
+            <a href="MicrosoftIdentity/Account/SignOut">Log out</a>
+        </button>
     </Authorized>
     <NotAuthorized>
-        <a href="MicrosoftIdentity/Account/SignIn">Log in</a>
+        <button class="bg-gray-700">
+            <a href="MicrosoftIdentity/Account/SignIn">Log in</a>
+        </button>
     </NotAuthorized>
 </AuthorizeView>
