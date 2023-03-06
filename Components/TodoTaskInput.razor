@@ -1,0 +1,36 @@
+﻿@using Microsoft.Graph;
+@inject Microsoft.Graph.GraphServiceClient GraphServiceClient
+
+<div class="flex items-center gap-5">
+    <input placeholder="Enter a task" class="bg-gray-700 outline-none px-5 py-3 rounded-md w-full" @bind-value="Task" />
+    <div class="bg-gray-700 p-3 rounded-md hover:cursor-pointer hover:bg-green-500" @onclick="() => CreateNewTask()">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.883 3.007 12 3a1 1 0 0 1 .993.883L13 4v7h7a1 1 0 0 1 .993.883L21 12a1 1 0 0 1-.883.993L20 13h-7v7a1 1 0 0 1-.883.993L12 21a1 1 0 0 1-.993-.883L11 20v-7H4a1 1 0 0 1-.993-.883L3 12a1 1 0 0 1 .883-.993L4 11h7V4a1 1 0 0 1 .883-.993L12 3l-.117.007Z" fill="#ffffff" /></svg>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public TodoTaskList? SelectedTodoTaskList { get; set; }
+    [Parameter]
+    public ITodoTaskListTasksCollectionPage? TodoTaskListTasks { get; set; }
+    [Parameter]
+    public EventCallback OnSuccess { get; set; }
+
+    public string Task { get; set; } = "";
+
+    private async Task CreateNewTask()
+    {
+        @if (SelectedTodoTaskList is not null && Task != string.Empty)
+        {
+            var TodoTaskToCreate = new TodoTask()
+                {
+                    Title = Task
+                };
+            var result = await GraphServiceClient.Me.Todo.Lists[SelectedTodoTaskList?.Id].Tasks.Request().AddAsync(TodoTaskToCreate);
+            if (result is not null)
+            {
+                TodoTaskListTasks?.Add(result);
+                await OnSuccess.InvokeAsync();
+            }
+        }
+    }
+}

@@ -5,7 +5,11 @@
 @inject Microsoft.Graph.GraphServiceClient GraphServiceClient
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 
-<div class="bg-blue-300 flex flex-grow flex-row">
+<div class="bg-blue-300 flex flex-grow flex-row relative">
+
+    @*<div class="bg-blue-900 w-16 h-16 absolute bottom-5 right-5 rounded-full text-white font-bold flex justify-center items-center">
+        <h1>Add</h1>
+    </div>*@
 
     <div class="bg-gray-900 text-white flex flex-col gap-1 w-[300px]">
         @if (todoTaskList is not null)
@@ -31,30 +35,20 @@
         }
     </div>
 
-    <div class="flex flex-col flex-grow bg-gray-800 px-10 py-7 text-white gap-10">
+    <div class="flex flex-col flex-grow bg-gray-800 px-10 py-7 text-white">
         @if (selectedTodoTaskList is not null)
         {
             <h1 class="text-4xl text-blue-400">@selectedTodoTaskList.DisplayName</h1>
         }
 
-        <div class="flex flex-col flex-grow gap-1 overflow-y-scroll h-[400px]">
+        <div class="flex flex-col flex-grow gap-1 overflow-y-auto h-[400px] mt-10 mb-5">
             @if (todoTasks is not null)
             {
                 @foreach (var task in todoTasks.Where(t => t.Status != Microsoft.Graph.TaskStatus.Completed))
                 {
-                    <div class="bg-gray-900 rounded-md p-3 flex gap-3 items-center">
-                        <div>
-                            @if (task.Status == Microsoft.Graph.TaskStatus.Completed)
-                            {
-                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2Zm3.22 6.97-4.47 4.47-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06Z" fill="#ffffff" /></svg>
-                            }
-                            else
-                            {
-                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Z"
-                                          fill="#ffffff" />
-                                </svg>
-                            }
+                    <div class="bg-gray-900 rounded-md p-3 flex gap-3 items-center hover:bg-gray-700">
+                        <div @onclick="() => CompleteTask(task)">
+                            <TaskIcon></TaskIcon>
                         </div>
                         <h1 class="">@task.Title</h1>
                     </div>
@@ -68,18 +62,8 @@
                     @foreach (var task in todoTasks.Where(t => t.Status == Microsoft.Graph.TaskStatus.Completed))
                     {
                         <div class="bg-gray-900 rounded-md p-3 flex gap-3 items-center">
-                            <div>
-                                @if (task.Status == Microsoft.Graph.TaskStatus.Completed)
-                                {
-                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2Zm3.22 6.97-4.47 4.47-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06Z" fill="#ffffff" /></svg>
-                                }
-                                else
-                                {
-                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Z"
-                                              fill="#ffffff" />
-                                    </svg>
-                                }
+                            <div @onclick="() => UnCompleteTask(task)">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2Zm3.22 6.97-4.47 4.47-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06Z" fill="#ffffff" /></svg>
                             </div>
                             <h1 class="line-through">@task.Title</h1>
                         </div>
@@ -87,6 +71,7 @@
                 }
             }
         </div>
+        <TodoTaskInput SelectedTodoTaskList="selectedTodoTaskList" TodoTaskListTasks="todoTasks" OnSuccess="HandleSuccess"></TodoTaskInput>
     </div>
 </div>
 
@@ -115,11 +100,16 @@
         }
     }
 
+    public void HandleSuccess()
+    {
+        StateHasChanged();
+    }
+
     private string GetColor(string id)
     {
         if (selectedTodoTaskList?.Id == id)
         {
-            return "bg-gray-700";   
+            return "bg-gray-700";
         }
         return "";
     }
@@ -140,5 +130,19 @@
         {
             ConsentHandler.HandleException(ex);
         }
+    }
+
+    private async Task CompleteTask(TodoTask task)
+    {
+        task.Status = Microsoft.Graph.TaskStatus.Completed;
+        var result = await GraphServiceClient.Me.Todo.Lists[selectedTodoTaskList?.Id].Tasks[task.Id].Request().UpdateAsync(task);
+        task = result;
+    }
+
+    private async Task UnCompleteTask(TodoTask task)
+    {
+        task.Status = Microsoft.Graph.TaskStatus.NotStarted;
+        var result = await GraphServiceClient.Me.Todo.Lists[selectedTodoTaskList?.Id].Tasks[task.Id].Request().UpdateAsync(task);
+        task = result;
     }
 }
