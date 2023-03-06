@@ -1,0 +1,29 @@
+﻿@using Microsoft.Graph;
+<div class="flex items-center bg-gray-700 mr-auto py-2 px-2 gap-2 rounded-md my-2 hover:cursor-pointer select-none">
+    @if (Status)
+    {
+        <div>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.716 13.704a1 1 0 1 0-1.425-1.403L13 17.67V4a1 1 0 0 0-2 0v13.665L5.715 12.3a1 1 0 0 0-1.425 1.403l6.823 6.925a1.25 1.25 0 0 0 1.78 0l6.823-6.925Z" fill="#ffffff" /></svg>
+        </div>
+    }
+    else
+    {
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13.704 4.284a1 1 0 1 0-1.403 1.424L17.67 11H4a1 1 0 1 0 0 2h13.665L12.3 18.285a1 1 0 0 0 1.403 1.424l6.925-6.822a1.25 1.25 0 0 0 0-1.78l-6.925-6.823Z" fill="#ffffff" /></svg>
+    }
+    <p>Completed</p>
+
+    @if (TodoTasks is not null)
+    {
+        @if (TodoTasks.Count(t => t.Status == Microsoft.Graph.TaskStatus.Completed) != 0)
+        {
+            <p>@TodoTasks?.Count(t => t.Status == Microsoft.Graph.TaskStatus.Completed)</p>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public bool Status { get; set; }
+    [Parameter]
+    public ITodoTaskListTasksCollectionPage? TodoTasks { get; set; }
+}
