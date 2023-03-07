@@ -8,7 +8,7 @@
 <div class="bg-blue-300 flex flex-grow flex-row relative">
 
     @*<div class="bg-blue-900 w-16 h-16 absolute bottom-5 right-5 rounded-full text-white font-bold flex justify-center items-center">
-        <h1>Add</h1>
+    <h1>Add</h1>
     </div>*@
 
     <div class="bg-gray-900 text-white flex flex-col gap-1 w-[300px]">
@@ -53,15 +53,18 @@
                         <h1 class="">@task.Title</h1>
                     </div>
                 }
-                <div @onclick="() => ShowCompleted = !ShowCompleted">
-                    <CompletedButton Status="@ShowCompleted" TodoTasks="todoTasks"></CompletedButton>
-                </div>
+                @if (todoTasks.Count(t => t.Status == Microsoft.Graph.TaskStatus.Completed) > 0)
+                {
+                    <div @onclick="() => ShowCompleted = !ShowCompleted">
+                        <CompletedButton Status="@ShowCompleted" TodoTasks="todoTasks"></CompletedButton>
+                    </div>
+                }
                 @if (ShowCompleted)
                 {
 
                     @foreach (var task in todoTasks.Where(t => t.Status == Microsoft.Graph.TaskStatus.Completed))
                     {
-                        <div class="bg-gray-900 rounded-md p-3 flex gap-3 items-center">
+                        <div class="bg-gray-900 rounded-md p-3 flex gap-3 items-center hover:bg-gray-700">
                             <div @onclick="() => UnCompleteTask(task)">
                                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2Zm3.22 6.97-4.47 4.47-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06Z" fill="#ffffff" /></svg>
                             </div>
