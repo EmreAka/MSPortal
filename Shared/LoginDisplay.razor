@@ -1,9 +1,28 @@
-﻿<AuthorizeView>
+﻿@using Microsoft.Graph
+@using Microsoft.Identity.Web;
+@inject Microsoft.Graph.GraphServiceClient GraphServiceClient
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
+
+<AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity?.Name
-        <button class="bg-red-500 px-2 py-1 rounded-md hover:bg-red-700 ease-in-out duration-300">
-            <a href="MicrosoftIdentity/Account/SignOut">Log out</a>
-        </button>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 bg-gray-800 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-700 ease-in-out duration-300">
+                @if (ImageStreamUrl is not null)
+                {
+                    <img src="@ImageStreamUrl" class="h-10 w-10 rounded-full" />
+                }
+                @if (User is not null)
+                {
+                    <h1>@User.DisplayName</h1>
+                }
+                @*<h1>
+                    @context.User.Identity?.Name
+                </h1>*@
+            </div>
+            <button class="bg-gray-800 px-3 py-3 rounded-md hover:bg-gray-700 ease-in-out duration-300">
+                <a href="MicrosoftIdentity/Account/SignOut">Log out</a>
+            </button>
+        </div>
     </Authorized>
     <NotAuthorized>
         <button class="bg-gray-700">
@@ -11,3 +30,34 @@
         </button>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    private string? ImageStreamUrl { get; set; }
+    private User? User { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+
+            var result = await GraphServiceClient.Me.Photo.Content.Request().GetAsync();
+            User = await GraphServiceClient.Me.Request().GetAsync();
+            
+            if (result != null)
+            {
+                var buffer = new byte[result.Length];
+                await result.ReadAsync(buffer, 0, (int)result.Length);
+                var base64 = Convert.ToBase64String(buffer);
+                ImageStreamUrl = $"data:image/png;base64,{base64}";
+            }
+            else
+            {
+                ImageStreamUrl = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ConsentHandler.HandleException(ex);
+        }
+    }
+}
