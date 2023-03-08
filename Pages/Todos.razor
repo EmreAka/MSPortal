@@ -11,21 +11,36 @@
     <h1>Add</h1>
     </div>*@
 
-    <div class="bg-gray-900 text-white flex flex-col gap-1 w-[300px] overflow-y-auto h-max-full">
+    <div class="relative bg-gray-900 text-white flex flex-col justify-between gap-1 w-[320px] w-m-[320px] overflow-y-auto h-max-full">
         @if (todoTaskList is not null)
         {
-            @foreach (var todo in todoTaskList)
-            {
-                <div class="@GetColor(todo.Id) flex gap-3 hover:bg-gray-700 hover:cursor-pointer py-2 px-2"
-             @onclick="() => FetchTasks(todo)">
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3.5 16.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4 .5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.993L7.5 17h13.503H7.5Zm-4-6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4 .5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.993L7.5 11h13.503H7.5Zm-4-6.492a1.5 1.5 0 1 1 0 2.999 1.5 1.5 0 0 1 0-3ZM7.5 5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.994l.116-.006h13.503H7.5Z"
-                              fill="#ffffff" />
-                    </svg>
-                    <h2 class="truncate">@todo.DisplayName</h2>
+            <div class="flex flex-col gap-1">
+                @foreach (var todo in todoTaskList)
+                {
+                    <div class="@GetColor(todo.Id) flex gap-3 hover:bg-gray-700 hover:cursor-pointer py-2 px-2 items-center"
+                 @onclick="() => FetchTasks(todo)" @onmouseenter="() => HoveredTodoTaskList = todo" @onmouseleave="() => HoveredTodoTaskList = null">
+                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.5 16.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4 .5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.993L7.5 17h13.503H7.5Zm-4-6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4 .5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.993L7.5 11h13.503H7.5Zm-4-6.492a1.5 1.5 0 1 1 0 2.999 1.5 1.5 0 0 1 0-3ZM7.5 5h13.503a1 1 0 0 1 .117 1.993l-.117.007H7.5a1 1 0 0 1-.116-1.994l.116-.006h13.503H7.5Z"
+                                  fill="#ffffff" />
+                        </svg>
+                        <h2 class="truncate">@todo.DisplayName</h2>
+                        @if (HoveredTodoTaskList?.Id == todo.Id)
+                        {
+                            <div class="ml-auto hover:fill-red-500 fill-white" @onclick="() => DeleteTodoTaskList(todo)">
+                                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.5 6a1 1 0 0 1-.883.993L20.5 7h-.845l-1.231 12.52A2.75 2.75 0 0 1 15.687 22H8.313a2.75 2.75 0 0 1-2.737-2.48L4.345 7H3.5a1 1 0 0 1 0-2h5a3.5 3.5 0 1 1 7 0h5a1 1 0 0 1 1 1Zm-7.25 3.25a.75.75 0 0 0-.743.648L13.5 10v7l.007.102a.75.75 0 0 0 1.486 0L15 17v-7l-.007-.102a.75.75 0 0 0-.743-.648Zm-4.5 0a.75.75 0 0 0-.743.648L9 10v7l.007.102a.75.75 0 0 0 1.486 0L10.5 17v-7l-.007-.102a.75.75 0 0 0-.743-.648ZM12 3.5A1.5 1.5 0 0 0 10.5 5h3A1.5 1.5 0 0 0 12 3.5Z"/></svg>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="flex items-center justify-between w-full gap-[1px]">
+                @*<input class="w-full" placeholder="New list"/>*@
+                <input placeholder="New list" class="bg-gray-700 outline-none px-4 py-1 w-full" @bind-value="NewListName" />
+                <div class="bg-gray-700 hover:cursor-pointer hover:bg-green-500 p-2"
+                 @onclick="() => AddNewList()">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.883 3.007 12 3a1 1 0 0 1 .993.883L13 4v7h7a1 1 0 0 1 .993.883L21 12a1 1 0 0 1-.883.993L20 13h-7v7a1 1 0 0 1-.883.993L12 21a1 1 0 0 1-.993-.883L11 20v-7H4a1 1 0 0 1-.993-.883L3 12a1 1 0 0 1 .883-.993L4 11h7V4a1 1 0 0 1 .883-.993L12 3l-.117.007Z" fill="#ffffff" /></svg>
                 </div>
-
-            }
+            </div>
         }
         else
         {
@@ -35,11 +50,11 @@
         }
     </div>
 
-    <div class="flex flex-col bg-gray-800 px-10 py-7 text-white w-full justify-between">
+    <div class="flex flex-col bg-gray-800 px-10 py-7 text-white flex-grow justify-between">
         <div class="flex flex-col gap-1 overflow-y-auto mb-3">
             @if (selectedTodoTaskList is not null)
             {
-                <h1 class="text-4xl text-blue-400">@selectedTodoTaskList.DisplayName</h1>
+                <h1 class="text-4xl text-blue-400 mb-3">@selectedTodoTaskList.DisplayName</h1>
             }
             @if (todoTasks is not null)
             {
@@ -94,6 +109,8 @@
     TodoTaskList? selectedTodoTaskList;
     ITodoTaskListTasksCollectionPage? todoTasks;
     public bool ShowCompleted { get; set; } = false;
+    public string? NewListName { get; set; }
+    public TodoTaskList? HoveredTodoTaskList { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -166,6 +183,27 @@
         if (result.StatusCode == System.Net.HttpStatusCode.NoContent)
         {
             todoTasks?.Remove(task);
+        }
+    }
+
+    private async Task DeleteTodoTaskList(TodoTaskList todoTaskList)
+    {
+        var result = await GraphServiceClient.Me.Todo.Lists[todoTaskList.Id].Request().DeleteResponseAsync();
+        if (result.StatusCode == System.Net.HttpStatusCode.NoContent)
+            this.todoTaskList?.Remove(todoTaskList);
+    }
+
+    private async Task AddNewList()
+    {
+        @if (NewListName != string.Empty || NewListName is not null)
+        {
+            TodoTaskList todoTaskList = new() { DisplayName = NewListName };
+            var result = await GraphServiceClient.Me.Todo.Lists.Request().AddAsync(todoTaskList);
+            if (result is not null)
+            {
+                this.todoTaskList?.Add(result);
+                NewListName = null;
+            }
         }
     }
 }
