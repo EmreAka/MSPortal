@@ -30,6 +30,7 @@
             {
                 TodoTaskListTasks?.Add(result);
                 await OnSuccess.InvokeAsync();
+                Task = "";
             }
         }
     }
