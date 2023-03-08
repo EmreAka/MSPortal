@@ -3,30 +3,34 @@
 @using Microsoft.Graph
 @inject Microsoft.Graph.GraphServiceClient GraphServiceClient
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
+@inject NavigationManager NavigationManager
 
 <PageTitle>Index</PageTitle>
 
-<div class="text-white">
+<div class="text-white bg-gray-800 flex flex-col flex-grow p-3 gap-10">
 
-    @if (user == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
+    @*@if (user is not null)
     {
         <div class="flex flex-col items-center justify-center">
             <h2 class="font-bold text-4xl">Welcome @user.DisplayName</h2>
         </div>
-    }
+    }*@
 
-    <AuthorizeView>
-        <Authorized>
-            @foreach (var claim in @context.User.Claims)
-            {
-                <h2>@claim.Value</h2>
-            }
-        </Authorized>
-    </AuthorizeView>
+    <div class="flex flex-col items-center justify-center">
+        <h2 class="font-bold text-4xl">Dashboard</h2>
+    </div>
+
+    <div class="flex items-center justify-between mx-auto gap-28">
+        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer"
+            @onclick="() => NavigateToToDos()">
+            <h2 class="font-bold">Microsoft To Do</h2>
+        </div>
+
+        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer">
+            <h2 class="font-bold">Outlook</h2>
+        </div>
+    </div>
+
 </div>
 
 @code {
@@ -42,5 +46,10 @@
         {
             ConsentHandler.HandleException(ex);
         }
+    }
+
+    private void NavigateToToDos()
+    {
+        NavigationManager.NavigateTo("/todos");
     }
 }
