@@ -5,7 +5,7 @@
 @inject Microsoft.Graph.GraphServiceClient GraphServiceClient
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 
-<div class="bg-blue-300 flex flex-row relative h-full">
+<div class="bg-blue-300 flex flex-row relative h-full min-h-full">
 
     @*<div class="bg-blue-900 w-16 h-16 absolute bottom-5 right-5 rounded-full text-white font-bold flex justify-center items-center">
     <h1>Add</h1>
@@ -35,13 +35,12 @@
         }
     </div>
 
-    <div class="flex flex-col flex-grow bg-gray-800 px-10 py-7 text-white">
-        @if (selectedTodoTaskList is not null)
-        {
-            <h1 class="text-4xl text-blue-400">@selectedTodoTaskList.DisplayName</h1>
-        }
-
-        <div class="flex flex-col flex-grow gap-1 overflow-y-auto h-[400px] mt-10 mb-5">
+    <div class="flex flex-col bg-gray-800 px-10 py-7 text-white w-full justify-between">
+        <div class="flex flex-col gap-1 overflow-y-auto mb-3">
+            @if (selectedTodoTaskList is not null)
+            {
+                <h1 class="text-4xl text-blue-400">@selectedTodoTaskList.DisplayName</h1>
+            }
             @if (todoTasks is not null)
             {
                 @foreach (var task in todoTasks.Where(t => t.Status != Microsoft.Graph.TaskStatus.Completed))
