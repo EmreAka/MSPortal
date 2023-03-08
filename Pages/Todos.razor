@@ -5,13 +5,13 @@
 @inject Microsoft.Graph.GraphServiceClient GraphServiceClient
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 
-<div class="bg-blue-300 flex flex-grow flex-row relative">
+<div class="bg-blue-300 flex flex-row relative h-full">
 
     @*<div class="bg-blue-900 w-16 h-16 absolute bottom-5 right-5 rounded-full text-white font-bold flex justify-center items-center">
     <h1>Add</h1>
     </div>*@
 
-    <div class="bg-gray-900 text-white flex flex-col gap-1 w-[300px]">
+    <div class="bg-gray-900 text-white flex flex-col gap-1 w-[300px] overflow-y-auto h-max-full">
         @if (todoTaskList is not null)
         {
             @foreach (var todo in todoTaskList)
