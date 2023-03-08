@@ -3,5 +3,5 @@
 This is a Blazor app built using .NET v7.0 that connects to Microsoft Graph.
 
 - You can view tasks, toggle the task between complete and incomplete, and a new Task.
-- You can summarize your last email with Cognitive Services.
+- You can summarize your last email with Cognitive Services, translate emails with Azure Translator.
 - You can get upcoming meetings for the rest of the day.
