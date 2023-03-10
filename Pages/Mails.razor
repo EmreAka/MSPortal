@@ -158,6 +158,7 @@
 
             await ExtractKeyPhrases(document, client);
             await SummarizeDocument(document, client);
+            await AnalyzingSentiment(document, client);
         }
         catch (RequestFailedException exception)
         {
@@ -237,6 +238,25 @@
                     Console.WriteLine();
                 }
             }
+        }
+    }
+
+    private async Task AnalyzingSentiment(string document, TextAnalyticsClient client)
+    {
+        try
+        {
+            Response<DocumentSentiment> response = await client.AnalyzeSentimentAsync(document);
+            DocumentSentiment docSentiment = response.Value;
+
+            Console.WriteLine($"Sentiment was {docSentiment.Sentiment}, with confidence scores: ");
+            Console.WriteLine($"  Positive confidence score: {docSentiment.ConfidenceScores.Positive}.");
+            Console.WriteLine($"  Neutral confidence score: {docSentiment.ConfidenceScores.Neutral}.");
+            Console.WriteLine($"  Negative confidence score: {docSentiment.ConfidenceScores.Negative}.");
+        }
+        catch (RequestFailedException exception)
+        {
+            Console.WriteLine($"Error Code: {exception.ErrorCode}");
+            Console.WriteLine($"Message: {exception.Message}");
         }
     }
 
