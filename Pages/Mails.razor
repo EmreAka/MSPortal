@@ -6,6 +6,8 @@
 @using System.Text.Json;
 @using System.Text;
 @using Azure.AI.TextAnalytics;
+@using System.Text.RegularExpressions;
+@using System.Net;
 @inject Microsoft.Graph.GraphServiceClient GraphServiceClient
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 @inject HttpClient HttpClient
@@ -134,16 +136,18 @@
         AzureKeyCredential credential = new(apiKey);
         TextAnalyticsClient client = new(endpointUri, credential);
 
-        string document =
-        "Dear [Emre Aka],"
-        + "Thank you for your recent application for the position of [Backend developer] at [Doğuş Teknoloji]. We were impressed with your qualifications and experience, and would like to invite you to interview for the position."
-        + "The interview will take place on Microsoft Teams at 16:00 online. The interview will last approximately 1 hour and will consist of a series of questions about your qualifications, experience, and suitability for the position."
-        + "Please come prepared to discuss your experience in detail, as well as any relevant skills or achievements that you believe make you a strong candidate for the position. We also encourage you to bring any questions you may have about the company or the position, as we are happy to answer them."
-        + "If you are unable to attend the interview on the date and time specified, please let us know as soon as possible so that we can arrange an alternate time."
-        + "We look forward to meeting with you and discussing your application further."
-        + "Best regards,"
-        + "Emine Aka"
-        + "Human Resources, Doğuş Teknoloji";
+        //string document =
+        //"Dear [Emre Aka],"
+        //+ "Thank you for your recent application for the position of [Backend developer] at [Doğuş Teknoloji]. We were impressed with your qualifications and experience, and would like to invite you to interview for the position."
+        //+ "The interview will take place on Microsoft Teams at 16:00 online. The interview will last approximately 1 hour and will consist of a series of questions about your qualifications, experience, and suitability for the position."
+        //+ "Please come prepared to discuss your experience in detail, as well as any relevant skills or achievements that you believe make you a strong candidate for the position. We also encourage you to bring any questions you may have about the company or the position, as we are happy to answer them."
+        //+ "If you are unable to attend the interview on the date and time specified, please let us know as soon as possible so that we can arrange an alternate time."
+        //+ "We look forward to meeting with you and discussing your application further."
+        //+ "Best regards,"
+        //+ "Emine Aka"
+        //+ "Human Resources, Doğuş Teknoloji";
+
+        string document = ExtractTextFromHtml();
 
         try
         {
@@ -234,5 +238,18 @@
                 }
             }
         }
+    }
+
+    private string ExtractTextFromHtml()
+    {
+        if (Message is not null)
+        {
+            string myMarkup = Message.Body.Content;
+            string decodedMarkup = WebUtility.HtmlDecode(myMarkup);
+            string plainText = Regex.Replace(decodedMarkup, @"<[^>]*>", String.Empty);
+            Console.WriteLine(plainText);
+            return plainText;
+        }
+        throw new Exception("No message selected");
     }
 }
