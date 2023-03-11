@@ -26,7 +26,8 @@
             <h2 class="font-bold">Microsoft To Do</h2>
         </div>
 
-        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer">
+        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer"
+             @onclick="() => NavigateToToMails()">
             <h2 class="font-bold">Outlook Mail</h2>
         </div>
     </div>
@@ -51,5 +52,10 @@
     private void NavigateToToDos()
     {
         NavigationManager.NavigateTo("/todos");
+    }
+
+    private void NavigateToToMails()
+    {
+        NavigationManager.NavigateTo("/mails");
     }
 }
