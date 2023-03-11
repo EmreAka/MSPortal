@@ -2,20 +2,38 @@
 @using Microsoft.Graph;
 
 <div class="fixed top-0 left-0 h-screen w-screen bg-transparent-400 flex items-center justify-center z-20 rounded-md">
-    <div class="w-8/12 h-4/6 bg-gray-900 text-white z-100 shadow-xl p-3 rounded-md">
-        
-        <h1>@Summary.DetectedLanguage.Name</h1>
-        <h1>@Summary.DocumentSentiment.Sentiment</h1>
+    <div class="w-8/12 h-4/6 bg-gray-900 text-white z-100 shadow-xl rounded-lg">
+        <div id="header" class="h-10 bg-black flex items-center p-3 justify-between items-center rounded-t-lg shadow-lg">
+            <h1 class="font-bold truncate">
+                @Message.From.EmailAddress.Address - @Message.Subject
+            </h1>
+            <button @onclick="() => CloseModal()">
+                Close
+            </button>
+        </div>
+        <div id="content" class="p-3">
+            <h1>@Summary.DetectedLanguage.Name</h1>
+            <h1>@Summary.DocumentSentiment.Sentiment</h1>
 
-        <p>
-            @Summary.SummarySentence.OrderBy(x => x.RankScore).FirstOrDefault().Text
-        </p>
+            <p>
+                @Summary.SummarySentence.OrderBy(x => x.RankScore).FirstOrDefault().Text
+            </p>
+        </div>
     </div>
 </div>
 
 @code {
     [Parameter]
     public Summary Summary { get; set; }
-    //[Parameter]
-    //public Message Message { get; set; }
+
+    [Parameter]
+    public Message Message { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync();
+    }
 }

@@ -88,9 +88,9 @@
     </div>
 </div>
 
-@if (Summary is not null && IsModalOpen)
+@if (Summary is not null && IsModalOpen && Message is not null)
 {
-    <SummaryModal Summary="@Summary"></SummaryModal>
+    <SummaryModal Summary="@Summary" Message="@Message" OnClose="CloseModel"></SummaryModal>
 }
 
 @code {
@@ -278,5 +278,10 @@
             return plainText;
         }
         throw new Exception("No message selected");
+    }
+
+    public void CloseModel()
+    {
+        IsModalOpen = false;
     }
 }
