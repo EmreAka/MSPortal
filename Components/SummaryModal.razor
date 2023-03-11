@@ -1,0 +1,21 @@
+﻿@using BlazorSample.Models;
+@using Microsoft.Graph;
+
+<div class="fixed top-0 left-0 h-screen w-screen bg-transparent-400 flex items-center justify-center z-20 rounded-md">
+    <div class="w-8/12 h-4/6 bg-gray-900 text-white z-100 shadow-xl p-3 rounded-md">
+        
+        <h1>@Summary.DetectedLanguage.Name</h1>
+        <h1>@Summary.DocumentSentiment.Sentiment</h1>
+
+        <p>
+            @Summary.SummarySentence.OrderBy(x => x.RankScore).FirstOrDefault().Text
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Summary Summary { get; set; }
+    //[Parameter]
+    //public Message Message { get; set; }
+}

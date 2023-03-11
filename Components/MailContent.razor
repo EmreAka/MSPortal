@@ -1,0 +1,10 @@
+﻿<div class="p-3" id="message-view">
+    <p>
+        @((MarkupString)Content)
+    </p>
+</div>
+
+@code {
+    [Parameter]
+    public string Content { get; set; }
+}
