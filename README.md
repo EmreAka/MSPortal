@@ -53,6 +53,15 @@ Make note of the **secret's value** as you'll use it in the next step. Also, nav
 ### 2. Create Azure Cognitive Service
 
 * Go to [Azure Portal](https://portal.azure.com) and login with your testing account that has Application developer or administrator permissions.
+* Go to **Free Services** and find **Cognitive Service for Language**. Click **Create**.
+* Click **Continue to create your resource**.
+* Select a resource group or create new one.
+* Select a region and name your instance.
+* Select **Free F0** pricing.
+* Click **Review and Create** to create your Azure Cognitive Service.
+* Go to your created service.
+* Save your **Subscription ID**, **Endpoint** and then click **Click here to manage keys**.
+* Save your **KEY 1**, **KEY 2** and **Location/Region**
 
 ### 3. Run your Blazor Server app
 
@@ -62,6 +71,12 @@ Make note of the **secret's value** as you'll use it in the next step. Also, nav
   * Navigate to your Blazor app in your editor, and select *appsettings.json* file, replace:
     * "CLIENT_ID" with `Application (client) ID`
     * "CLIENT_SECRET" with `Secret's value`
+    * "Key" with `KEY 1`
+    * "KeyTwo" with `KEY 2`
+    * "SubscriptionKey" with `Subscription ID`
+    * "Location" with `Location/Region`
+    * "Endpoint" with `Endpoint`
+    
 * If you haven't done it previously, register a developer SSL certificate for dotnet apps. In your terminal, run the following command:
 
   ```dotnetcli
