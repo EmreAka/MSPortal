@@ -108,6 +108,11 @@
 
     protected async override Task OnInitializedAsync()
     {
+        await GetEmails();
+    }
+
+    private async Task GetEmails()
+    {
         var result = await GraphServiceClient.Me.MailFolders["Inbox"].Messages.Delta().Request().GetAsync();
         if (result is not null)
         {
@@ -129,6 +134,12 @@
     private async Task Delete(Message message)
     {
         var result = await GraphServiceClient.Me.MailFolders["Inbox"].Messages[message.Id].Request().DeleteResponseAsync();
+        Console.WriteLine(result.StatusCode);
+        if (result.StatusCode == HttpStatusCode.NoContent)
+        {
+            Message = null;
+            await GetEmails();
+        }
         StateHasChanged();
     }
 
