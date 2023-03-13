@@ -93,12 +93,18 @@
     <SummaryModal Summary="@Summary" Message="@Message" OnClose="CloseModel"></SummaryModal>
 }
 
+@if (IsSummaryLoading)
+{
+    <LoadingModal></LoadingModal>
+}
+
 @code {
     public IMessageDeltaCollectionPage? Messages { get; set; }
     public Message? Message { get; set; }
     public Message? SelectedMessage { get; set; }
     public Summary? Summary { get; set; }
     public bool IsModalOpen { get; set; } = false;
+    public bool IsSummaryLoading { get; set; } = false;
 
     protected async override Task OnInitializedAsync()
     {
@@ -152,6 +158,7 @@
         string document = ExtractTextFromHtml();
         try
         {
+            IsSummaryLoading = true;
             Response<DetectedLanguage> response = await client.DetectLanguageAsync(document);
             DetectedLanguage language = response.Value;
 
@@ -162,6 +169,7 @@
             await ExtractKeyPhrases(document, client);
             await SummarizeDocument(document, client);
             await AnalyzingSentiment(document, client);
+            IsSummaryLoading = false;
             IsModalOpen = true;
         }
         catch (RequestFailedException exception)
