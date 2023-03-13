@@ -171,7 +171,7 @@
         }
         catch (Exception ex)
         {
-            ConsentHandler.HandleException(ex);
+            Console.WriteLine(ex);
         }
 
         //CloseSendEmailModal();
@@ -197,16 +197,26 @@
         }
     }
 
-    private async Task Delete(Message message)
+    private async Task Delete(Message? message)
     {
-        var result = await GraphServiceClient.Me.MailFolders["Inbox"].Messages[message.Id].Request().DeleteResponseAsync();
-        Console.WriteLine(result.StatusCode);
-        if (result.StatusCode == HttpStatusCode.NoContent)
+        try
         {
-            Message = null;
-            await GetEmails();
+            if (message is not null)
+            {
+                var result = await GraphServiceClient.Me.MailFolders["Inbox"].Messages[message.Id].Request().DeleteResponseAsync();
+                Console.WriteLine(result.StatusCode);
+                if (result.StatusCode == HttpStatusCode.NoContent)
+                {
+                    Message = null;
+                    await GetEmails();
+                }
+                StateHasChanged();
+            }
         }
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex); 
+        }
     }
 
     private string GetSelectedMailBgColor(string id)
@@ -253,7 +263,7 @@
             }
             catch (Exception ex)
             {
-                ConsentHandler.HandleException(ex);
+                Console.WriteLine(ex);
             }
         }
     }
@@ -275,7 +285,7 @@
         }
         catch (Exception ex)
         {
-            ConsentHandler.HandleException(ex);
+            Console.WriteLine(ex);
         }
     }
 
@@ -348,7 +358,7 @@
         }
         catch (Exception ex)
         {
-            ConsentHandler.HandleException(ex);
+            Console.WriteLine(ex);
         }
     }
 
