@@ -128,27 +128,30 @@
 
     public async Task SendEmail()
     {
-        var message = new Message()
-        {
-            ToRecipients = new List<Recipient>()
-            {
-                new Recipient()
-                {
-                    EmailAddress = new EmailAddress()
-                    {
-                        Address = "aka.emre@hotmail.com"
-                    }
-                }
-            },
-            Subject = "Test mail",
-            Body = new ItemBody()
-            {
-                ContentType = BodyType.Text,
-                Content = "Test mail content aşko kuşkoo"
-            },
-        };
+        //var message = new Message()
+        //{
+        //    ToRecipients = new List<Recipient>()
+        //    {
+        //        new Recipient()
+        //        {
+        //            EmailAddress = new EmailAddress()
+        //            {
+        //                Address = "aka.emre@hotmail.com",
+        //            }
+        //        }
+        //    },
+        //    Subject = "Test mail",
+        //    Body = new ItemBody()
+        //    {
+        //        ContentType = BodyType.Text,
+        //        Content = "Test mail content aşko kuşkoo"
+        //    },
 
-        await GraphServiceClient.Me.SendMail(message, true).Request().PostAsync();
+        //};
+
+        //await GraphServiceClient.Me.SendMail(message, true).Request().PostAsync();
+
+        CloseSendEmailModal();
     }
 
     public void CloseSendEmailModal()
