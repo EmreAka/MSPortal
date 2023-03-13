@@ -50,7 +50,11 @@ Make note of the **secret's value** as you'll use it in the next step. Also, nav
 
 </details>
 
-### 2. Run your Blazor Server app
+### 2. Create Azure Cognitive Service
+
+* Go to [Azure Portal](https://portal.azure.com) and login with your testing account that has Application developer or administrator permissions.
+
+### 3. Run your Blazor Server app
 
 * Clone the repository to your local workspace or directly download the source code.
 * Update app and secret (only if in the previous step you registered your app manually)
