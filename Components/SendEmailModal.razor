@@ -1,8 +1,8 @@
-﻿<div class="h-screen w-screen bg-transparent z-10 fixed top-0 left-0 flex items-center justify-center">
+﻿@using BlazorSample.Models;
+<div class="h-screen w-screen bg-transparent z-10 fixed top-0 left-0 flex items-center justify-center">
     <div id="modal" class="w-8/12 h-4/6 bg-gray-900 text-white z-100 shadow-xl rounded-lg">
         <div id="header" class="h-10 bg-blue-700 flex items-center p-3 justify-between items-center rounded-t-lg shadow-lg">
             <div>
-                
             </div>
             <button @onclick="() => CloseModal()" class="hover:bg-red-700 px-2 py-1 rounded-md flex items-center">
                 Close
@@ -19,17 +19,31 @@
                     Translate message to English
                 </button>
             </div>
-            <div id="to" class="flex gap-3 items-center">
-                <h2>To</h2>
-                <input placeholder="test@outlook.com" class="w-full outline-none bg-transparent text-white"/>
-            </div>
-            <div id="to" class="flex gap-3 items-center">
-                <h2>Subject</h2>
-                <input placeholder="Microsoft graph .NET SDK" class="w-full outline-none bg-transparent text-white" />
-            </div>
-            <div id="mail" class="flex flex-col mt-3">
-                <textarea placeholder="Your mail" style="resize:vertical;" maxlength="500" class="w-full h-full h-max-full bg-transparent text-white"/>
-            </div>
+            <EditForm Model="@MessageDto">
+                <div id="to" class="flex gap-3 items-center">
+                    <h2>To</h2>
+                    <InputText placeholder="test@outlook.com" class="w-full outline-none bg-transparent text-white" @bind-Value="MessageDto.To"/>
+                </div>
+                @if (ShowToError)
+                {
+                    <h1 class="text-red-400">This field cannot be empty.</h1>
+                }
+                <div id="to" class="flex gap-3 items-center">
+                    <h2>Subject</h2>
+                    <InputText @bind-Value="MessageDto.Subject" placeholder="Microsoft graph .NET SDK" class="w-full outline-none bg-transparent text-white" />
+                </div>
+                @if (ShowSubjectError)
+                {
+                    <h1 class="text-red-400">This field cannot be empty.</h1>
+                }
+                <div id="mail" class="flex flex-col mt-3">
+                    <InputTextArea @bind-Value="MessageDto.Mail" placeholder="Your mail" style="resize:vertical;" maxlength="500" class="w-full h-full h-max-full bg-transparent text-white" />
+                </div>
+                @if (ShowMailError)
+                {
+                    <h1 class="text-red-400">This field cannot be empty.</h1>
+                }
+            </EditForm>
         </div>
     </div>
 </div>
@@ -41,6 +55,13 @@
     [Parameter]
     public EventCallback<Task> OnSend { get; set; }
 
+    [Parameter]
+    public MessageDto? MessageDto { get; set; }
+
+    public bool ShowToError { get; set; }
+    public bool ShowSubjectError { get; set; }
+    public bool ShowMailError { get; set; }
+
     private async Task CloseModal()
     {
         await OnClose.InvokeAsync();
@@ -48,6 +69,27 @@
 
     private async Task SendMail()
     {
-        await OnSend.InvokeAsync();
+        if (MessageDto.Subject is not null && MessageDto.To is not null && MessageDto.Mail is not null)
+        {
+            ShowMailError = false;
+            ShowSubjectError = false;
+            ShowToError = false;
+            await OnSend.InvokeAsync();
+        }
+        else
+        {
+            if (MessageDto.To is null)
+            {
+                ShowToError = true;
+            }
+            if (MessageDto.Subject is null)
+            {
+                ShowSubjectError = true;
+            }
+            if (MessageDto.Mail is null)
+            {
+                ShowMailError = true;
+            }
+        }
     }
 }
