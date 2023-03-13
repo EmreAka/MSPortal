@@ -143,10 +143,12 @@
             Subject = "Test mail",
             Body = new ItemBody()
             {
+                ContentType = BodyType.Text,
                 Content = "Test mail content aşko kuşkoo"
-            }
+            },
         };
-        await GraphServiceClient.Me.SendMail(message).Request().PostAsync();
+
+        await GraphServiceClient.Me.SendMail(message, true).Request().PostAsync();
     }
 
     public void CloseSendEmailModal()
