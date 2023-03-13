@@ -49,3 +49,27 @@ Every app that uses Azure AD for authentication must be registered with Azure AD
 Make note of the **secret's value** as you'll use it in the next step. Also, navigate to **Overview tab** and make a note of the **Application (client) ID** and **Directory (tenant) ID**. You'll use them in the next steps.
 
 </details>
+
+### 2. Run your Blazor Server app
+
+* Clone the repository to your local workspace or directly download the source code.
+* Update app and secret (only if in the previous step you registered your app manually)
+  * Open the project folder with the editor of your choice. (Visual Studio Code is recommended.)
+  * Navigate to your Blazor app in your editor, and select *appsettings.json* file, replace:
+    * "CLIENT_ID" with `Application (client) ID`
+    * "CLIENT_SECRET" with `Secret's value`
+* If you haven't done it previously, register a developer SSL certificate for dotnet apps. In your terminal, run the following command:
+
+  ```dotnetcli
+  dotnet dev-certs https --trust
+  ```
+
+* In your terminal, run the following command:
+
+  ```dotnetcli
+  dotnet run
+  ```
+
+In your browser, navigate to `https://localhost:5001` , and log in using an Azure AD user account to see the app running.
+
+After the login, you'll see your email address on the panel of your app:
