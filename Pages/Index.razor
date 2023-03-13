@@ -8,30 +8,6 @@
 <PageTitle>Dashboard</PageTitle>
 
 <div class="text-white bg-gray-800 flex flex-col flex-grow p-3 gap-10">
-
-    @*@if (user is not null)
-    {
-        <div class="flex flex-col items-center justify-center">
-            <h2 class="font-bold text-4xl">Welcome @user.DisplayName</h2>
-        </div>
-    }*@
-
-   @* <div class="flex flex-col items-center justify-center">
-        <h2 class="font-bold text-4xl">Dashboard</h2>
-    </div>
-
-    <div class="flex items-center justify-between mx-auto gap-28">
-        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer"
-            @onclick="() => NavigateToToDos()">
-            <h2 class="font-bold">Microsoft To Do</h2>
-        </div>
-
-        <div class="bg-gray-900 w-[500px] h-[100px] flex items-center justify-center rounded-md hover:cursor-pointer"
-             @onclick="() => NavigateToToMails()">
-            <h2 class="font-bold">Outlook Mail</h2>
-        </div>
-    </div>*@
-
     <div class="bg-gray-900 rounded-lg">
         <div class="p-3 flex flex-col gap-3">
             <h1 class="font-bold text-2xl">Microsoft To Do</h1>
@@ -53,12 +29,10 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @code {
     User? user;
-
     protected override async Task OnInitializedAsync()
     {
         try
@@ -67,7 +41,7 @@
         }
         catch (Exception ex)
         {
-            ConsentHandler.HandleException(ex);
+            Console.WriteLine(ex);
         }
     }
 
