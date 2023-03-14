@@ -37,7 +37,7 @@
                     <h1 class="text-red-400">This field cannot be empty.</h1>
                 }
                 <div id="mail" class="flex flex-col mt-3">
-                    <InputTextArea @bind-Value="MessageDto.Mail" placeholder="Your mail" style="resize:vertical;" maxlength="500" class="w-full h-full h-max-full bg-transparent text-white" />
+                    <InputTextArea @bind-Value="MessageDto.Mail" placeholder="Your mail" style="resize:vertical;" class="w-full h-full h-max-full bg-transparent text-white" />
                 </div>
                 @if (ShowMailError)
                 {
