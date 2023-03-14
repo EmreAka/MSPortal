@@ -5,7 +5,7 @@
 - You can send emails,
 - You can summarize your recent emails with Cognitive Services. Also, get the opinion and language predictions,
 
-(Demonstration of the project)[https://clipchamp.com/watch/D0olACYuqPg]
+[Demonstration of the project](https://clipchamp.com/watch/D0olACYuqPg)
 
 ## Setup
 
